@@ -6,7 +6,14 @@ public class Main {
   public static void main(String[] args) {
     // You can use print statements as follows for debugging, they'll be visible when running tests.
     System.out.println("Logs from your program will appear here!");
-    ServerSocket serverSocket = null;
+
+    RedisServer server = new RedisServer();
+
+    server.startServer();
+
+    server.stopServer();
+
+    /*ServerSocket serverSocket = null;
     Socket clientSocket = null;
     int port = 6379;
     try {
@@ -14,9 +21,6 @@ public class Main {
       serverSocket.setReuseAddress(true);
       // Wait for connection from client.
       clientSocket = serverSocket.accept();
-      BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-      PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-      //RespResponse response = new RespResponse("PONG", RespResponse.RespResponseType.SIMPLE_STRING);
       out.print("+PONG\r\n");
       while (true) {
         out.print("+PONG\r\n");
@@ -32,6 +36,6 @@ public class Main {
         } catch (IOException e) {
           System.out.println("IOException: " + e.getMessage());
         }
-    }
+    }*/
   }
 }

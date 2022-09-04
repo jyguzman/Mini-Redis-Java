@@ -17,7 +17,7 @@ public class Main {
       BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
       PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
       //RespResponse response = new RespResponse("PONG", RespResponse.RespResponseType.SIMPLE_STRING);
-      //out.println();
+      out.print("+PONG\r\n");
       while (in.readLine() != null) {
         out.print("+PONG\r\n");
       }

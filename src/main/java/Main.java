@@ -18,7 +18,7 @@ public class Main {
       PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
       //RespResponse response = new RespResponse("PONG", RespResponse.RespResponseType.SIMPLE_STRING);
       out.println("+PONG\r\n");
-      while (in.readLine() != null) {
+      while (true) {
         out.print("+PONG\r\n");
       }
 

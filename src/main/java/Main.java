@@ -1,9 +1,6 @@
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.io.PrintWriter;
-import java.io.BufferedReader;
 
 public class Main {
   public static void main(String[] args) {
@@ -17,10 +14,12 @@ public class Main {
       serverSocket.setReuseAddress(true);
       // Wait for connection from client.
       clientSocket = serverSocket.accept();
+      BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
       PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
       //RespResponse response = new RespResponse("PONG", RespResponse.RespResponseType.SIMPLE_STRING);
-      out.println("+PONG\r\n");
-
+      while (in.readLine() != null) {
+        out.println("+PONG\r\n");
+      }
 
       } catch (IOException e) {
         System.out.println("IOException: " + e.getMessage());

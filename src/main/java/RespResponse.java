@@ -27,6 +27,6 @@ public class RespResponse {
 
     public String sendRespResponse() {
         Character firstByte = this.getFirstByte();
-        return firstByte.toString() + this.string + "/r/n";
+        return firstByte.toString() + this.string + "\r\n";
     }
 }

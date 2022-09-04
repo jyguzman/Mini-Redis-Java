@@ -17,10 +17,10 @@ public class Main {
       serverSocket.setReuseAddress(true);
       // Wait for connection from client.
       clientSocket = serverSocket.accept();
-
-      PrintWriter out = new PrintWriter(clientSocket.getOutputStream());
+      BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+      PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
       //RespResponse response = new RespResponse("PONG", RespResponse.RespResponseType.SIMPLE_STRING);
-      out.println("+PONG/r/n");
+      out.println("+PONG\r\n");
       //BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
       //String clientInput = in.readLine();
 
@@ -30,7 +30,9 @@ public class Main {
       } finally {
         try {
           if (clientSocket != null) {
-
+            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+            //RespResponse response = new RespResponse("PONG", RespResponse.RespResponseType.SIMPLE_STRING);
+            out.println("+PONG/r/n");
             clientSocket.close();
           }
         } catch (IOException e) {

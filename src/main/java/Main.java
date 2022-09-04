@@ -7,6 +7,9 @@ public class Main {
     // You can use print statements as follows for debugging, they'll be visible when running tests.
     System.out.println("Logs from your program will appear here!");
 
+    RespResponse response = new RespResponse("PONG", RespResponse.RespResponseType.SIMPLE_STRING);
+    System.out.println(response.sendRespResponse());
+
     ServerSocket serverSocket = null;
     Socket clientSocket = null;
     int port = 6379;
@@ -15,6 +18,9 @@ public class Main {
       serverSocket.setReuseAddress(true);
       // Wait for connection from client.
       clientSocket = serverSocket.accept();
+
+
+
       } catch (IOException e) {
         System.out.println("IOException: " + e.getMessage());
       } finally {

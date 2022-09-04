@@ -17,7 +17,7 @@ public class Main {
       serverSocket.setReuseAddress(true);
       // Wait for connection from client.
       clientSocket = serverSocket.accept();
-      //PrintWriter out = new PrintWriter(clientSocket.getOutputStream());
+
       //BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
       //String clientInput = in.readLine();
 
@@ -27,8 +27,9 @@ public class Main {
       } finally {
         try {
           if (clientSocket != null) {
+            PrintWriter out = new PrintWriter(clientSocket.getOutputStream());
             RespResponse response = new RespResponse("PONG", RespResponse.RespResponseType.SIMPLE_STRING);
-            System.out.println(response.sendRespResponse());
+            out.println(response.sendRespResponse());
             clientSocket.close();
           }
         } catch (IOException e) {

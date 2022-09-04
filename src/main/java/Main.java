@@ -1,15 +1,14 @@
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.io.PrintWriter;
+import java.io.BufferedReader;
 
 public class Main {
   public static void main(String[] args) {
     // You can use print statements as follows for debugging, they'll be visible when running tests.
     System.out.println("Logs from your program will appear here!");
-
-    RespResponse response = new RespResponse("PONG", RespResponse.RespResponseType.SIMPLE_STRING);
-    System.out.println(response.sendRespResponse());
-
     ServerSocket serverSocket = null;
     Socket clientSocket = null;
     int port = 6379;
@@ -18,7 +17,9 @@ public class Main {
       serverSocket.setReuseAddress(true);
       // Wait for connection from client.
       clientSocket = serverSocket.accept();
-
+      //PrintWriter out = new PrintWriter(clientSocket.getOutputStream());
+      //BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+      //String clientInput = in.readLine();
 
 
       } catch (IOException e) {
@@ -26,6 +27,8 @@ public class Main {
       } finally {
         try {
           if (clientSocket != null) {
+            RespResponse response = new RespResponse("PONG", RespResponse.RespResponseType.SIMPLE_STRING);
+            System.out.println(response.sendRespResponse());
             clientSocket.close();
           }
         } catch (IOException e) {

@@ -14,7 +14,7 @@ public class RedisServer {
     private BufferedReader in;
     private PrintWriter out;
 
-    public void startServer() {
+    private void openConnection() {
         try {
             this.serverSocket = new ServerSocket(this.PORT);
             this.serverSocket.setReuseAddress(true);
@@ -22,26 +22,30 @@ public class RedisServer {
         } catch (IOException e) {
             System.out.println("Error connecting.");
         }
+    }
 
+    private void openInputAndOutputStreams() {
         try {
             out = new PrintWriter(clientSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         } catch (IOException e){
             System.out.println("Error opening input and output streams.");
         }
-
-        String inputLine = "";
+    }
+    private void readClientInputsAndRespond() {
+        String clientMessage = "";
         try {
-            inputLine = in.readLine();
+            clientMessage = in.readLine();
         } catch (IOException e) {
             System.out.println("Error reading line.");
         }
-        while (true) {
+
+        while (clientMessage != null) {
             out.print("+PONG\r\n");
         }
     }
 
-    public void stopServer() {
+    private void stopServer() {
         try {
             in.close();
             out.close();
@@ -50,5 +54,16 @@ public class RedisServer {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void start() {
+        this.openConnection();
+        this.openInputAndOutputStreams();
+        this.readClientInputsAndRespond();
+        this.stopServer();
+    }
+
+    public static void main(String[] args) {
+        new RedisServer().start();
     }
 }

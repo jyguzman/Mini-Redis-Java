@@ -10,7 +10,7 @@ event loops, the Redis protocol and more.
 
 # Passing the first stage
 
-The entry point for your Redis implementation is in `Main.java`. Study and
+The entry point for your Redis implementation is in `main.Main.java`. Study and
 uncomment the relevant code, and push your changes to pass the first stage:
 
 ```sh
@@ -27,6 +27,6 @@ Note: This section is for stages 2 and beyond.
 
 1. Ensure you have `java (1.8)` installed locally
 1. Run `./spawn_redis_server.sh` to run your Redis server, which is implemented
-   in `Main.java`.
+   in `main.Main.java`.
 1. Commit your changes and run `git push origin master` to submit your solution
    to CodeCrafters. Test output will be streamed to your terminal.

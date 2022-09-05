@@ -1,3 +1,5 @@
+package Redis;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -5,15 +7,13 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class RedisClientHandler extends Thread {
-    private int clientNo;
     private Socket clientSocket;
 
     private PrintWriter out;
     private BufferedReader in;
 
-    public RedisClientHandler(Socket socket, int clientNo) {
+    public RedisClientHandler(Socket socket) {
         this.clientSocket = socket;
-        this.clientNo = clientNo;
     }
 
     private void openInputAndOutputStreams() {
@@ -30,7 +30,7 @@ public class RedisClientHandler extends Thread {
         try {
             clientMessage = in.readLine();
         } catch (IOException e) {
-            System.out.println("Error receiving client " + this.clientNo + " input.");
+            System.out.println("Error receiving client input.");
         }
 
         while (clientMessage != null) {
@@ -54,5 +54,4 @@ public class RedisClientHandler extends Thread {
         this.readClientInputsAndRespond();
         this.end();
     }
-
 }

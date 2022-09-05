@@ -2,7 +2,6 @@ import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
 
 public class RedisClient {
@@ -54,6 +53,7 @@ public class RedisClient {
     public void end() {
         try {
             in.close();
+            stdIn.close();
             out.close();
             clientSocket.close();
         } catch (IOException e) {
@@ -64,9 +64,8 @@ public class RedisClient {
     public static void main(String[] args) {
         RedisClient client = new RedisClient();
         client.connect();
-
         String userInput = client.getClientInput();
-        while (!(userInput.equals("exit"))) {
+        while (!((userInput).equals("exit"))) {
             String response = client.sendMessage(userInput);
             System.out.println(response);
             userInput = client.getClientInput();

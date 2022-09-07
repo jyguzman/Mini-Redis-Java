@@ -7,7 +7,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import com.google.gson.*;
 
 public class RedisClient {
     private static final int PORT = 6379;
@@ -16,8 +15,6 @@ public class RedisClient {
     private BufferedReader stdIn;
     private PrintWriter out;
     private Socket clientSocket;
-
-    private Gson gson = new Gson();
 
     private RESPSerializer serializer = new RESPSerializer();
 

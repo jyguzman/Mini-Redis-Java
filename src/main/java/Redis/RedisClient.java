@@ -2,18 +2,15 @@ package Redis;
 
 import RESPUtils.RESPSerializer;
 
-import java.io.IOException;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 
 public class RedisClient {
     private static final int PORT = 6379;
     private static final String HOST = "127.0.0.1";
-    private BufferedReader in;
+    private DataInputStream in;
     private BufferedReader stdIn;
-    private PrintWriter out;
+    private DataOutputStream out;
     private Socket clientSocket;
 
     private RESPSerializer serializer = new RESPSerializer();
@@ -26,8 +23,8 @@ public class RedisClient {
         }
 
         try {
-            out = new PrintWriter(clientSocket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            out = new DataOutputStream(clientSocket.getOutputStream());
+            in = new DataInputStream(clientSocket.getInputStream());
             stdIn = new BufferedReader(new InputStreamReader(System.in));
         } catch (IOException e) {
             System.out.println("Error opening streams.");
@@ -47,11 +44,17 @@ public class RedisClient {
 
     public String sendMessage(String message) {
         String respArray = serializer.serializeToRespArray(message);
-        out.println(respArray);
-        System.out.println("Your message: " + respArray);
+        try {
+            System.out.println("Your message: " + respArray);
+            out.writeUTF(respArray);
+            out.flush();
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+
         String response = "";
         try {
-            response = in.readLine();
+            response = in.readUTF();
         } catch (IOException e) {
             System.out.println("Error receiving response.");
         }

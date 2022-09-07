@@ -2,17 +2,13 @@ package Redis;
 
 import RESPUtils.RESPDeserializer;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
-import com.google.gson.*;
 public class RedisClientHandler extends Thread {
     private Socket clientSocket;
 
-    private PrintWriter out;
-    private BufferedReader in;
+    private DataOutputStream out;
+    private DataInputStream in;
 
     private RESPDeserializer deserializer = new RESPDeserializer();
 
@@ -22,8 +18,8 @@ public class RedisClientHandler extends Thread {
 
     private void openInputAndOutputStreams() {
         try {
-            out = new PrintWriter(clientSocket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            out = new DataOutputStream(clientSocket.getOutputStream());
+            in = new DataInputStream(clientSocket.getInputStream());
         } catch (IOException e) {
             System.out.println("Error opening input and output streams.");
         }
@@ -31,9 +27,8 @@ public class RedisClientHandler extends Thread {
 
     private String getClientInput() {
         String clientMessage = "";
-        Gson gson = new Gson();
         try {
-            clientMessage = gson.fromJson(in.readLine(), String.class);
+            clientMessage = in.readUTF();
         } catch (IOException e) {
             System.out.println(e);
         }
@@ -45,10 +40,15 @@ public class RedisClientHandler extends Thread {
         while (clientMessage != null) {
             System.out.print(clientMessage);
             String[] clientMessageArgs = deserializer.deserializeRespArray(clientMessage);
-            if (clientMessageArgs[0].equals("ECHO")) {
-                out.println(clientMessageArgs[1]);
-            } else {
-                out.println("LKDSFMLSKD");
+            try {
+                if (clientMessageArgs[0].equals("ECHO")) {
+                    out.writeUTF(clientMessageArgs[1]);
+                } else {
+                    out.writeUTF("LKDSFMLSKD");
+                }
+                out.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
             clientMessage = getClientInput();
         }

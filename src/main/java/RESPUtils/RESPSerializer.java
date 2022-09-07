@@ -5,13 +5,11 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.*;
-import com.google.gson.Gson;
 public class RESPSerializer {
     private static final String CLRF = "\r\n";
     private static final String regex = "(\".*?\"|[^\"\\s]+)+(?=\\s*|\\s*$)";
     private Pattern p;
 
-    private Gson gson = new Gson();
     private enum ResponseType {
         BULK_STRING, SIMPLE_STRING, ERROR, INTEGER
     }
@@ -52,7 +50,7 @@ public class RESPSerializer {
                 .map(string -> this.serializeString(string, "BulkString"))
                 .collect(Collectors.joining(""));
 
-        return gson.toJson(respArray.append(joinedBulkStrings).toString());
+        return respArray.append(joinedBulkStrings).toString();
     }
 
     public static void main(String[] args) {
@@ -61,7 +59,7 @@ public class RESPSerializer {
         //System.out.println(ser.serializeString("hello", "BulkString"));
         //System.out.println(ser.serializeString("{ \"hello\": 5 }", "BulkString"));
         String res = ser.serializeToRespArray(x);
-        System.out.println(ser.gson.fromJson(res, String.class));
+        System.out.println(res);
         //System.out.println(("*2\r\n$4\r\nECHO\r\n$3\r\nhey\r\n").equals(res));
     }
 }

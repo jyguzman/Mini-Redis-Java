@@ -10,7 +10,7 @@ public class RedisClient {
     private static final String HOST = "127.0.0.1";
     private BufferedReader in;
     private BufferedReader stdIn;
-    private PrintWriter out;
+    private DataOutputStream out;
     private Socket clientSocket;
 
     private RESPSerializer serializer = new RESPSerializer();
@@ -23,7 +23,7 @@ public class RedisClient {
         }
 
         try {
-            out = new PrintWriter(clientSocket.getOutputStream(), true);
+            out = new DataOutputStream(clientSocket.getOutputStream());
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             stdIn = new BufferedReader(new InputStreamReader(System.in));
         } catch (IOException e) {
@@ -46,9 +46,8 @@ public class RedisClient {
         String respArray = serializer.serializeToRespArray(message);
         try {
             out.writeUTF(respArray);
-            out.flush();
-        } catch(IOException e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            System.out.println("Error receiving response.");
         }
 
         String response = "";

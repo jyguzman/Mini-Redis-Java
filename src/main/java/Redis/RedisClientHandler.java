@@ -10,7 +10,7 @@ public class RedisClientHandler extends Thread {
     private Socket clientSocket;
 
     private PrintWriter out;
-    private BufferedReader in;
+    private DataInputStream in;
 
     private RESPDeserializer deserializer = new RESPDeserializer();
 
@@ -21,7 +21,7 @@ public class RedisClientHandler extends Thread {
     private void openInputAndOutputStreams() {
         try {
             out = new PrintWriter(clientSocket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            in = new DataInputStream(clientSocket.getInputStream());
         } catch (IOException e) {
             System.out.println("Error opening input and output streams.");
         }

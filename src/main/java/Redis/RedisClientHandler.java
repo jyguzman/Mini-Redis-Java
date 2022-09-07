@@ -9,8 +9,8 @@ import java.net.SocketException;
 public class RedisClientHandler extends Thread {
     private Socket clientSocket;
 
-    private DataOutputStream out;
-    private DataInputStream in;
+    private PrintWriter out;
+    private BufferedReader in;
 
     private RESPDeserializer deserializer = new RESPDeserializer();
 
@@ -20,8 +20,8 @@ public class RedisClientHandler extends Thread {
 
     private void openInputAndOutputStreams() {
         try {
-            out = new DataOutputStream(clientSocket.getOutputStream());
-            in = new DataInputStream(clientSocket.getInputStream());
+            out = new PrintWriter(clientSocket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         } catch (IOException e) {
             System.out.println("Error opening input and output streams.");
         }
@@ -30,9 +30,9 @@ public class RedisClientHandler extends Thread {
     private String getClientInput() {
         String clientMessage = "";
         try {
-            clientMessage = in.readUTF();
+            clientMessage = in.readLine();
         } catch (IOException e) {
-            System.out.println(e);
+            e.printStackTrace();
             this.end();
         }
         return clientMessage;
@@ -42,24 +42,19 @@ public class RedisClientHandler extends Thread {
         String clientMessage = this.getClientInput();
         while (clientMessage != null) {
             //String[] clientMessageArgs = deserializer.deserializeRespArray(clientMessage);
-            try {
-                if (clientMessage.equals("exit")) {
-                    break;
-                }
+            //try {
                 //if (clientMessageArgs[0].equals("ECHO")) {
                 //    out.writeUTF(clientMessageArgs[1]);
                 //} else {
 
                 //}
-                out.writeUTF("+PONG\r\n");
-                out.flush();
-            } catch (SocketException e) {
-                break;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                out.print("+PONG\r\n");
+                //out.flush();
+            //} catch (IOException e) {
+             //   e.printStackTrace();
+            //}
 
-            clientMessage = getClientInput();
+            //clientMessage = getClientInput();
         }
     }
 

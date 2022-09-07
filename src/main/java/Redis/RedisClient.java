@@ -8,9 +8,9 @@ import java.net.Socket;
 public class RedisClient {
     private static final int PORT = 6379;
     private static final String HOST = "127.0.0.1";
-    private DataInputStream in;
+    private BufferedReader in;
     private BufferedReader stdIn;
-    private DataOutputStream out;
+    private PrintWriter out;
     private Socket clientSocket;
 
     private RESPSerializer serializer = new RESPSerializer();
@@ -23,8 +23,8 @@ public class RedisClient {
         }
 
         try {
-            out = new DataOutputStream(clientSocket.getOutputStream());
-            in = new DataInputStream(clientSocket.getInputStream());
+            out = new PrintWriter(clientSocket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             stdIn = new BufferedReader(new InputStreamReader(System.in));
         } catch (IOException e) {
             System.out.println("Error opening streams.");
@@ -53,7 +53,7 @@ public class RedisClient {
 
         String response = "";
         try {
-            response = in.readUTF();
+            response = in.readLine();
         } catch (IOException e) {
             System.out.println("Error receiving response.");
         }

@@ -1,10 +1,13 @@
 package Redis;
 
+import RESPUtils.RESPSerializer;
+
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import com.google.gson.*;
 
 public class RedisClient {
     private static final int PORT = 6379;
@@ -13,6 +16,10 @@ public class RedisClient {
     private BufferedReader stdIn;
     private PrintWriter out;
     private Socket clientSocket;
+
+    private Gson gson = new Gson();
+
+    private RESPSerializer serializer = new RESPSerializer();
 
     public void connect() {
         try {
@@ -42,7 +49,9 @@ public class RedisClient {
     }
 
     public String sendMessage(String message) {
-        out.println(message);
+        String respArray = serializer.serializeToRespArray(message);
+        out.println(respArray);
+        System.out.println("Your message: " + respArray);
         String response = "";
         try {
             response = in.readLine();

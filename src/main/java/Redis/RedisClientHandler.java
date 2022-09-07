@@ -1,16 +1,20 @@
 package Redis;
 
+import RESPUtils.RESPDeserializer;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-
+import com.google.gson.*;
 public class RedisClientHandler extends Thread {
     private Socket clientSocket;
 
     private PrintWriter out;
     private BufferedReader in;
+
+    private RESPDeserializer deserializer = new RESPDeserializer();
 
     public RedisClientHandler(Socket socket) {
         this.clientSocket = socket;
@@ -25,16 +29,28 @@ public class RedisClientHandler extends Thread {
         }
     }
 
-    private void readClientInputsAndRespond() {
+    private String getClientInput() {
         String clientMessage = "";
+        Gson gson = new Gson();
         try {
-            clientMessage = in.readLine();
+            clientMessage = gson.fromJson(in.readLine(), String.class);
         } catch (IOException e) {
-            System.out.println("Error receiving client input.");
+            System.out.println(e);
         }
+        return clientMessage;
+    }
 
+    private void communicate() {
+        String clientMessage = this.getClientInput();
         while (clientMessage != null) {
-            out.print("+PONG\r\n");
+            System.out.print(clientMessage);
+            String[] clientMessageArgs = deserializer.deserializeRespArray(clientMessage);
+            if (clientMessageArgs[0].equals("ECHO")) {
+                out.println(clientMessageArgs[1]);
+            } else {
+                out.println("LKDSFMLSKD");
+            }
+            clientMessage = getClientInput();
         }
     }
 
@@ -51,7 +67,7 @@ public class RedisClientHandler extends Thread {
     @Override
     public void run() {
         this.openInputAndOutputStreams();
-        this.readClientInputsAndRespond();
+        this.communicate();
         this.end();
     }
 }

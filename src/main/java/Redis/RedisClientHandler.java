@@ -4,6 +4,8 @@ import RESPUtils.RESPDeserializer;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
+
 public class RedisClientHandler extends Thread {
     private Socket clientSocket;
 
@@ -31,6 +33,7 @@ public class RedisClientHandler extends Thread {
             clientMessage = in.readUTF();
         } catch (IOException e) {
             System.out.println(e);
+            this.end();
         }
         return clientMessage;
     }
@@ -40,15 +43,22 @@ public class RedisClientHandler extends Thread {
         while (clientMessage != null) {
             //String[] clientMessageArgs = deserializer.deserializeRespArray(clientMessage);
             try {
+                if (clientMessage.equals("exit")) {
+                    break;
+                }
                 //if (clientMessageArgs[0].equals("ECHO")) {
                 //    out.writeUTF(clientMessageArgs[1]);
                 //} else {
-                    out.writeUTF("+PONG\r\n");
+
                 //}
+                out.writeUTF("+PONG\r\n");
                 out.flush();
+            } catch (SocketException e) {
+                break;
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
             clientMessage = getClientInput();
         }
     }

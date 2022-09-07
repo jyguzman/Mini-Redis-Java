@@ -43,7 +43,7 @@ public class RedisClientHandler extends Thread {
                 if (clientMessageArgs[0].equals("ECHO")) {
                     out.writeUTF(clientMessageArgs[1]);
                 } else {
-                    out.writeUTF("+PONG\r\n");
+                    out.writeUTF("PONG");
                 }
                 out.flush();
             } catch (IOException e) {

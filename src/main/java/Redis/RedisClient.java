@@ -45,7 +45,6 @@ public class RedisClient {
     public String sendMessage(String message) {
         String respArray = serializer.serializeToRespArray(message);
         try {
-            System.out.println("Your message: " + respArray);
             out.writeUTF(respArray);
             out.flush();
         } catch(IOException e) {

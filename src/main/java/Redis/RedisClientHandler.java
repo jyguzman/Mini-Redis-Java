@@ -30,7 +30,7 @@ public class RedisClientHandler extends Thread {
     private String getClientInput() {
         String clientMessage = "";
         try {
-            clientMessage = in.readLine();
+            clientMessage = in.readUTF();
         } catch (IOException e) {
             e.printStackTrace();
             this.end();

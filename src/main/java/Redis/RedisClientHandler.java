@@ -30,7 +30,7 @@ public class RedisClientHandler extends Thread {
     private String getClientInput() {
         String clientMessage = "";
         try {
-            clientMessage = in.readUTF();
+            clientMessage = in.readLine();
         } catch (IOException e) {
             e.printStackTrace();
             this.end();
@@ -41,20 +41,18 @@ public class RedisClientHandler extends Thread {
     private void communicate() {
         String clientMessage = this.getClientInput();
         while (clientMessage != null) {
-            //String[] clientMessageArgs = deserializer.deserializeRespArray(clientMessage);
-            //try {
-                //if (clientMessageArgs[0].equals("ECHO")) {
-                //    out.writeUTF(clientMessageArgs[1]);
-                //} else {
+            String[] clientMessageArgs = deserializer.deserializeRespArray(clientMessage);
+            try {
+                if (clientMessageArgs[0].equals("ECHO")) {
+                    out.println(clientMessageArgs[1]);
+                } else {
+                    out.print("+PONG\r\n");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-                //}
-                out.print("+PONG\r\n");
-                //out.flush();
-            //} catch (IOException e) {
-             //   e.printStackTrace();
-            //}
-
-            //clientMessage = getClientInput();
+            clientMessage = getClientInput();
         }
     }
 

@@ -1,8 +1,6 @@
 package RESPUtils;
-import com.google.gson.Gson;
 public class RESPDeserializer {
     private static final String CLRF = "\r\n";
-    private Gson gson = new Gson();
     public String[] deserializeRespArray(String respArray) {
         int numberOfStrings = Integer.parseInt(respArray.charAt(1) + "");
         String[] result = new String[numberOfStrings];

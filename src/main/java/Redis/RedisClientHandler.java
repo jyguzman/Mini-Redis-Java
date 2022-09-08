@@ -30,23 +30,19 @@ public class RedisClientHandler extends Thread {
     private String getClientInput() {
         StringBuilder clientMessage = new StringBuilder();
         int c = 0;
-        int[] buf = new int[1024];
         int numStrings = 0;
         int count = 0;
         try {
             clientMessage.append((char)in.read());
             numStrings = Integer.parseInt("" + (char)in.read());
             clientMessage.append(numStrings);
-            //System.out.println(numStrings);
             while (count < 1 + 2 * numStrings) {
                 c = in.read();
                 clientMessage.append((char) c);
-                //System.out.print((char)c);
                 if ((char) c == '\n')
                     count++;
             }
 
-            //clientMessage = in.readLine();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -60,8 +56,8 @@ public class RedisClientHandler extends Thread {
         while (clientMessage != null) {
             String[] clientMessageArgs = deserializer.deserializeRespArray(clientMessage);
 
-            if (clientMessageArgs[0].equals("ECHO")) {
-                out.println(clientMessageArgs[1]);
+            if (clientMessageArgs[0].equalsIgnoreCase("ECHO")) {
+                out.println("+" + clientMessageArgs[1] + "\r");
             } else {
                 out.println("+PONG\r");
             }

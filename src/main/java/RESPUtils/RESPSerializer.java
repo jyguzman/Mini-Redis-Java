@@ -6,7 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.*;
 public class RESPSerializer {
-    private static final String CLRF = "\\r\\n";
+    private static final String CLRF = "\r\n";
     private static final String regex = "(\".*?\"|[^\"\\s]+)+(?=\\s*|\\s*$)";
     private Pattern p;
 
@@ -50,6 +50,7 @@ public class RESPSerializer {
                 .map(string -> this.serializeString(string, "BulkString"))
                 .collect(Collectors.joining(""));
 
+        joinedBulkStrings = joinedBulkStrings.substring(0, joinedBulkStrings.length() - 1);
         return respArray.append(joinedBulkStrings).toString();
     }
 

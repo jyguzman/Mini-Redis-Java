@@ -1,6 +1,6 @@
 package RESPUtils;
 public class RESPDeserializer {
-    private static final String CRLF = "\\r\\n";
+    private static final String CRLF = "\r\n";
     public String[] deserializeRespArray(String respArray) {
         int numberOfStrings = Integer.parseInt(respArray.charAt(1) + "");
         String[] result = new String[numberOfStrings];

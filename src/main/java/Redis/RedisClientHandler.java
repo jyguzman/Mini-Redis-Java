@@ -28,13 +28,30 @@ public class RedisClientHandler extends Thread {
     }
 
     private String getClientInput() {
-        String clientMessage = "";
+        StringBuilder clientMessage = new StringBuilder();
+        int c = 0;
+        int[] buf = new int[1024];
+        int numStrings = 0;
+        int count = 0;
         try {
-            clientMessage = in.readLine();
+            clientMessage.append((char)in.read());
+            numStrings = Integer.parseInt("" + (char)in.read());
+            clientMessage.append(numStrings);
+            //System.out.println(numStrings);
+            while (count < 1 + 2 * numStrings) {
+                c = in.read();
+                clientMessage.append((char) c);
+                //System.out.print((char)c);
+                if ((char) c == '\n')
+                    count++;
+            }
+
+            //clientMessage = in.readLine();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return clientMessage;
+
+        return clientMessage.toString();
     }
 
     private void communicate() {

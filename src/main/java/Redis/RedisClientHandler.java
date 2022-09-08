@@ -39,10 +39,10 @@ public class RedisClientHandler extends Thread {
 
     private void communicate() {
         String clientMessage = this.getClientInput();
-
+        System.out.println(clientMessage);
         while (clientMessage != null) {
             String[] clientMessageArgs = deserializer.deserializeRespArray(clientMessage);
-            System.out.println(clientMessageArgs[0]);
+
             if (clientMessageArgs[0].equals("ECHO")) {
                 out.println(clientMessageArgs[1]);
             } else {

@@ -46,7 +46,7 @@ public class RedisClientHandler extends Thread {
             //if (clientMessageArgs[0].equals("ECHO")) {
             //    out.println(clientMessageArgs[1]);
             //} else {
-                out.println("+PONG\r\n");
+                out.print("+PONG\r\n");
             //}
 
             clientMessage = getClientInput();

@@ -4,7 +4,6 @@ import RESPUtils.RESPDeserializer;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.SocketException;
 
 public class RedisClientHandler extends Thread {
     private Socket clientSocket;
@@ -33,14 +32,27 @@ public class RedisClientHandler extends Thread {
         int numStrings = 0;
         int count = 0;
         try {
+            /*char first = (char)in.read();
+            if (first == '\n')
+                return "\n";*/
             clientMessage.append((char)in.read());
             numStrings = Integer.parseInt("" + (char)in.read());
             clientMessage.append(numStrings);
+
             while (count < 1 + 2 * numStrings) {
                 c = in.read();
-                clientMessage.append((char) c);
-                if ((char) c == '\n')
+                if ((char) c == '\r') {
+                    System.out.println("\\r " + count);
+                }
+                else if ((char) c == '\n') {
                     count++;
+                    System.out.println("\\n " + count);
+                } else {
+                    System.out.println((char)c + " " + count);
+                }
+
+                clientMessage.append((char) c);
+
             }
 
         } catch (IOException e) {
@@ -52,14 +64,13 @@ public class RedisClientHandler extends Thread {
 
     private void communicate() {
         String clientMessage = this.getClientInput();
-        System.out.println(clientMessage);
         while (clientMessage != null) {
             String[] clientMessageArgs = deserializer.deserializeRespArray(clientMessage);
 
             if (clientMessageArgs[0].equalsIgnoreCase("ECHO")) {
-                out.println("+" + clientMessageArgs[1] + "\r");
+                out.println("+" + clientMessageArgs[1]);
             } else {
-                out.println("+PONG\r");
+                out.println("+PONG");
             }
 
             clientMessage = getClientInput();

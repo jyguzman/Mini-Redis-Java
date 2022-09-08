@@ -50,17 +50,16 @@ public class RESPSerializer {
                 .map(string -> this.serializeString(string, "BulkString"))
                 .collect(Collectors.joining(""));
 
-        joinedBulkStrings = joinedBulkStrings.substring(0, joinedBulkStrings.length() - 1);
         return respArray.append(joinedBulkStrings).toString();
     }
 
     public static void main(String[] args) {
-        String x = "SET \"{0 : \"\\rhello\"}\"";
+        String x = "ping";
         RESPSerializer ser = new RESPSerializer();
         //System.out.println(ser.serializeString("hello", "BulkString"));
         //System.out.println(ser.serializeString("{ \"hello\": 5 }", "BulkString"));
         String res = ser.serializeToRespArray(x);
-        System.out.println(res);
+        System.out.println(res + " " + res.length());
         //System.out.println(("*2\r\n$4\r\nECHO\r\n$3\r\nhey\r\n").equals(res));
     }
 }

@@ -1,9 +1,12 @@
 package Redis;
 
+import DataUtils.Cache;
 import RESPUtils.RESPDeserializer;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.List;
+import java.util.ArrayList;
 
 public class RedisClientHandler extends Thread {
     private Socket clientSocket;
@@ -12,6 +15,8 @@ public class RedisClientHandler extends Thread {
     private BufferedReader in;
 
     private RESPDeserializer deserializer = new RESPDeserializer();
+
+    private Cache cache = new Cache();
 
     public RedisClientHandler(Socket socket) {
         this.clientSocket = socket;
@@ -32,27 +37,16 @@ public class RedisClientHandler extends Thread {
         int numStrings = 0;
         int count = 0;
         try {
-            /*char first = (char)in.read();
-            if (first == '\n')
-                return "\n";*/
             clientMessage.append((char)in.read());
             numStrings = Integer.parseInt("" + (char)in.read());
             clientMessage.append(numStrings);
 
             while (count < 1 + 2 * numStrings) {
                 c = in.read();
-                if ((char) c == '\r') {
-                    System.out.println("\\r " + count);
-                }
-                else if ((char) c == '\n') {
+                if ((char) c == '\n') {
                     count++;
-                    System.out.println("\\n " + count);
-                } else {
-                    System.out.println((char)c + " " + count);
                 }
-
                 clientMessage.append((char) c);
-
             }
 
         } catch (IOException e) {
@@ -67,13 +61,23 @@ public class RedisClientHandler extends Thread {
         while (clientMessage != null) {
             String[] clientMessageArgs = deserializer.deserializeRespArray(clientMessage);
 
-            if (clientMessageArgs[0].equalsIgnoreCase("ECHO")) {
-                out.println("+" + clientMessageArgs[1]);
-            } else {
-                out.println("+PONG");
+            String command = clientMessageArgs[0].toLowerCase();
+            switch (command) {
+                case "echo":
+                    out.println("+" + clientMessageArgs[1]);
+                    break;
+                case "set":
+                    cache.put(clientMessageArgs[1], clientMessageArgs[2]);
+                    out.println("+OK");
+                    break;
+                case "get":
+                    out.println("+" + cache.get(clientMessageArgs[1]));
+                    break;
+                default:
+                    out.println("+PONG");
             }
 
-            clientMessage = getClientInput();
+            clientMessage = this.getClientInput();
         }
     }
 

@@ -7,7 +7,8 @@ import java.util.regex.Pattern;
 import java.util.stream.*;
 public class RESPSerializer {
     private static final String CLRF = "\r\n";
-    private static final String regex = "(\".*?\"|[^\"\\s]+)+(?=\\s*|\\s*$)";
+    //private static final String regex = "(\".*?\"|[^\"\\s]+)+(?=\\s*|\\s*$)";
+    private static final String regex = "(\".*\"|[^\"\\s]+)+(?=\\s*|\\s*$)"; // removed question mark
     private Pattern p;
 
     private enum ResponseType {
@@ -54,13 +55,13 @@ public class RESPSerializer {
     }
 
     public static void main(String[] args) {
-        String x = "ping";
+        String x = "ECHO \"{\"water\" : \"hel l o\"}\"";
         RESPSerializer ser = new RESPSerializer();
         //System.out.println(ser.serializeString("hello", "BulkString"));
         //System.out.println(ser.serializeString("{ \"hello\": 5 }", "BulkString"));
         String res = ser.serializeToRespArray(x);
-        System.out.println(res + " " + res.length());
-        //System.out.println(("*2\r\n$4\r\nECHO\r\n$3\r\nhey\r\n").equals(res));
+        System.out.println(res);
+        //System.out.println(("*2\r\n$4\r\nECHO\r\n$3\r\    nhey\r\n").equals(res));
     }
 }
 

@@ -10,7 +10,7 @@ public class RedisClientHandler extends Thread {
     private Socket clientSocket;
 
     private PrintWriter out;
-    private DataInputStream in;
+    private BufferedReader in;
 
     private RESPDeserializer deserializer = new RESPDeserializer();
 
@@ -21,7 +21,7 @@ public class RedisClientHandler extends Thread {
     private void openInputAndOutputStreams() {
         try {
             out = new PrintWriter(clientSocket.getOutputStream(), true);
-            in = new DataInputStream(clientSocket.getInputStream());
+            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         } catch (IOException e) {
             System.out.println("Error opening input and output streams.");
         }
@@ -33,19 +33,20 @@ public class RedisClientHandler extends Thread {
             clientMessage = in.readLine();
         } catch (IOException e) {
             e.printStackTrace();
-            this.end();
         }
         return clientMessage;
     }
 
     private void communicate() {
         String clientMessage = this.getClientInput();
+        System.out.print(clientMessage);
         while (clientMessage != null) {
             String[] clientMessageArgs = deserializer.deserializeRespArray(clientMessage);
+
             if (clientMessageArgs[0].equals("ECHO")) {
                 out.println(clientMessageArgs[1]);
             } else {
-                out.print("+PONG\r\n");
+                out.println("+PONG\r\n");
             }
 
             clientMessage = getClientInput();

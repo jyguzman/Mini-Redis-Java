@@ -1,6 +1,6 @@
 package RESPUtils;
 public class RESPDeserializer {
-    private static final String CLRF = "\r\n";
+    private static final String CRLF = "\\r\\n";
     public String[] deserializeRespArray(String respArray) {
         int numberOfStrings = Integer.parseInt(respArray.charAt(1) + "");
         String[] result = new String[numberOfStrings];
@@ -12,7 +12,7 @@ public class RESPDeserializer {
                 while (Character.isDigit(respArray.charAt(++i))) {
                     numChars += respArray.charAt(i) + "";
                 }
-                i += CLRF.length();
+                i += CRLF.length();
                 String word = "";
                 for (int j = 0; j < Integer.parseInt(numChars); j++) {
                     word += respArray.charAt(i++);
@@ -25,9 +25,11 @@ public class RESPDeserializer {
     }
 
     public static void main(String[] args) {
-        String x = "ECHO hey \\r";
-        RESPDeserializer ser = new RESPDeserializer();
-        String[] arr = ser.deserializeRespArray("*1\r\n$15\r\n\"{\"0\" : \"\\r\" }\"");
+        RESPSerializer ser = new RESPSerializer();
+        String serD = ser.serializeToRespArray("ECHO \"{\"water\":\"hello \\r \"}\"");
+        System.out.println(serD);
+        RESPDeserializer des = new RESPDeserializer();
+        String[] arr = des.deserializeRespArray(serD);
         for (String str : arr) {
             System.out.print(str + " ");
         }

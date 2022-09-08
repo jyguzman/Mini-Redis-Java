@@ -3,6 +3,7 @@ package Redis;
 import RESPUtils.RESPSerializer;
 
 import java.io.*;
+import java.net.ServerSocket;
 import java.net.Socket;
 
 public class RedisClient {
@@ -10,7 +11,7 @@ public class RedisClient {
     private static final String HOST = "127.0.0.1";
     private BufferedReader in;
     private BufferedReader stdIn;
-    private DataOutputStream out;
+    private PrintWriter out;
     private Socket clientSocket;
 
     private RESPSerializer serializer = new RESPSerializer();
@@ -23,7 +24,7 @@ public class RedisClient {
         }
 
         try {
-            out = new DataOutputStream(clientSocket.getOutputStream());
+            out = new PrintWriter(clientSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             stdIn = new BufferedReader(new InputStreamReader(System.in));
         } catch (IOException e) {
@@ -44,11 +45,7 @@ public class RedisClient {
 
     public String sendMessage(String message) {
         String respArray = serializer.serializeToRespArray(message);
-        try {
-            out.writeUTF(respArray);
-        } catch (IOException e) {
-            System.out.println("Error receiving response.");
-        }
+        out.println(respArray);
 
         String response = "";
         try {
@@ -77,7 +74,7 @@ public class RedisClient {
         String userInput = client.getClientInput();
         while (!(userInput.equals("exit"))) {
             String response = client.sendMessage(userInput);
-            System.out.print(response);
+            System.out.println(response);
             userInput = client.getClientInput();
         }
 

@@ -71,9 +71,9 @@ public class RedisClient {
         client.connect();
 
         String userInput = client.getClientInput();
-        while (!(userInput.equals("exit"))) {
+        while (!(userInput.equalsIgnoreCase("quit"))) {
             String response = client.sendMessage(userInput);
-            System.out.println(response);
+            System.out.println(response.substring(1));
             userInput = client.getClientInput();
         }
 

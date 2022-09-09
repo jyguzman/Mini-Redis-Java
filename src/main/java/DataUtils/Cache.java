@@ -1,16 +1,20 @@
 package DataUtils;
 
 import java.util.Map;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Cache {
-    private Map<String, String> cache = new HashMap();
+    private Map<String, String> cache = new ConcurrentHashMap();
 
     public void put(String key, String value) {
-        cache.put(key, value);
+        this.cache.put(key, value);
     }
 
     public String get(String key) {
-        return cache.get(key);
+        return this.cache.get(key);
+    }
+
+    public void delete(String key) {
+        this.cache.remove(key);
     }
 }

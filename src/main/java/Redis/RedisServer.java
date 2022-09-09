@@ -1,5 +1,7 @@
 package Redis;
 
+import DataUtils.Cache;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -11,6 +13,10 @@ public class RedisServer {
     private int clientNumber = 0;
     private Socket clientSocket;
 
+    private Cache cache = new Cache();
+
+    private  RedisController controller = new RedisController(this.cache);
+
     public void start() {
         try {
             this.serverSocket = new ServerSocket(this.PORT);
@@ -18,7 +24,7 @@ public class RedisServer {
                 this.clientNumber++;
                 this.serverSocket.setReuseAddress(true);
                 this.clientSocket = serverSocket.accept();
-                Thread redisClientThread = new Thread(new RedisClientHandler(this.clientSocket));
+                Thread redisClientThread = new Thread(new RedisClientHandler(this.clientSocket, this.controller, this.clientNumber));
                 System.out.println("Accepted client number " + this.clientNumber);
                 redisClientThread.start();
             }

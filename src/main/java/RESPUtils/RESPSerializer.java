@@ -1,14 +1,14 @@
 package RESPUtils;
+
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.*;
 public class RESPSerializer {
     private static final String CLRF = "\r\n";
     //private static final String regex = "(\".*?\"|[^\"\\s]+)+(?=\\s*|\\s*$)";
-    private static final String regex = "(\".*\"|[^\"\\s]+)+(?=\\s*|\\s*$)"; // removed question mark
+    private static final String regex = "(\".*\"|[^\"\\s]+)+(?=\\s*|\\s*$)"; // removed first question mark
     private Pattern p;
 
     private enum ResponseType {
@@ -40,6 +40,7 @@ public class RESPSerializer {
 
     public String serializeToRespArray(String message) {
         List<String> clientMessageArgs = new ArrayList();
+
         Matcher matches = this.p.matcher(message);
         while (matches.find()) {
             clientMessageArgs.add(matches.group());

@@ -18,7 +18,7 @@ public class RedisController {
     public String get(String key) {
         String value = this.cache.get(key);
         if (value != null) return "+" + value;
-        return "+null";
+        return "$-1";
     }
 
     public void delete(String key) {

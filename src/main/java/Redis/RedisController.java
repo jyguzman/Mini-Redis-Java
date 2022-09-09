@@ -1,7 +1,6 @@
 package Redis;
 
 import DataUtils.Cache;
-import DataUtils.TimeUtils;
 
 import java.util.Timer;
 import java.util.TimerTask;

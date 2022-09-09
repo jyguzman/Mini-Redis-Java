@@ -19,7 +19,7 @@ public class RedisController {
         String value = this.cache.get(key);
         if (value != null) return "+" + value;
         //return "KEY \"" + key + "\" not found.";
-        return "-1";///
+        return null;///
     }
 
     public void delete(String key) {

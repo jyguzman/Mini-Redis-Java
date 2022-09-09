@@ -7,6 +7,8 @@ import java.io.*;
 import java.net.Socket;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class RedisClientHandler extends Thread {
     private Socket clientSocket;
@@ -80,7 +82,13 @@ public class RedisClientHandler extends Thread {
                     String key = clientMessageArgs[1];
                     controller.set(key, clientMessageArgs[2]);
                     if (clientMessageArgs.length > 3 && clientMessageArgs[3].equalsIgnoreCase("PX")) {
-                        controller.deleteKeyAfterTimeMilliseconds(key, Long.parseLong(clientMessageArgs[4]));
+                        TimerTask deleteKey = new TimerTask() {
+                            public void run() {
+                                controller.delete(key);
+                            }
+                        };
+                        new Timer("Timer").schedule(deleteKey, Long.parseLong(clientMessageArgs[4]));
+                        //controller.deleteKeyAfterTimeMilliseconds(key, Long.parseLong(clientMessageArgs[4]));
                     }
                     out.println("+OK");
                     break;

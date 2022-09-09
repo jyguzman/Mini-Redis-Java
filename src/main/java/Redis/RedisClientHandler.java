@@ -88,7 +88,7 @@ public class RedisClientHandler extends Thread {
                     out.println("+OK");
                     break;
                 case "get":
-                    out.println("+" + controller.get(clientMessageArgs[1]));
+                    out.println(controller.get(clientMessageArgs[1]));
                     break;
                 default:
                     out.println("+PONG");

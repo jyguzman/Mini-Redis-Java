@@ -72,9 +72,6 @@ public class RedisClientHandler extends Thread {
             String[] clientMessageArgs = deserializer.deserializeRespArray(clientMessage);
             if (clientMessageArgs.length == 0) break;
             String command = clientMessageArgs[0].toLowerCase();
-            for (String str : clientMessageArgs) {
-                System.out.print(str + " ");
-            }
             switch (command) {
                 case "echo":
                     out.println("+" + clientMessageArgs[1]);

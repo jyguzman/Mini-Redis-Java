@@ -6,7 +6,6 @@ public class RESPDeserializer {
         int numberOfStrings = Integer.parseInt(respArray.charAt(1) + "");
         String[] result = new String[numberOfStrings];
         int i = 3; int resultIndex = 0;
-        System.out.println(respArray);
 
         while (i < respArray.length()) {
             if (respArray.charAt(i) == '$') {
@@ -25,7 +24,6 @@ public class RESPDeserializer {
             }
             i++;
         }
-        //System.out.println(result[0]);
         return result;
     }
 

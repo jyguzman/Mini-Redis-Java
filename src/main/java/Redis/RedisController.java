@@ -16,9 +16,10 @@ public class RedisController {
         this.cache.put(key, value);
     }
     public String get(String key) {
-        String value = this.cache.get(key);
-        if (value != null) return value;
-        return "KEY \"" + key + "\" not found.";
+        //String value = this.cache.get(key);
+        //if (value != null) return value;
+        //return "KEY \"" + key + "\" not found.";
+        return this.cache.get(key);
     }
 
     public void delete(String key) {

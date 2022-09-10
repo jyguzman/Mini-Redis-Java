@@ -43,6 +43,7 @@ public class RESPSerializer {
     }
 
     public String serializeToRespArray(String message) {
+        if (message == null || message.length() == 0) return null;
         List<String> clientMessageArgs = new ArrayList();
 
         Matcher matches = this.p.matcher(message);

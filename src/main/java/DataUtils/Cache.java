@@ -1,6 +1,7 @@
 package DataUtils;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Cache {
@@ -20,5 +21,9 @@ public class Cache {
 
     public boolean contains(String key) {
         return this.cache.containsKey(key);
+    }
+
+    public Set<String> keys() {
+        return this.cache.keySet();
     }
 }

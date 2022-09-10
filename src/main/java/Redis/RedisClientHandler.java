@@ -7,8 +7,8 @@ import java.net.Socket;
 
 public class RedisClientHandler extends Thread {
     private Socket clientSocket;
-    private PrintWriter out;
-    private BufferedReader in;
+    private DataOutputStream out;
+    private DataInputStream in;
     private int clientNumber;
     private RESPDeserializer deserializer = new RESPDeserializer();
     private RedisController controller;
@@ -20,42 +20,23 @@ public class RedisClientHandler extends Thread {
 
     private void openInputAndOutputStreams() {
         try {
-            out = new PrintWriter(clientSocket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            out = new DataOutputStream(clientSocket.getOutputStream());
+            in = new DataInputStream(clientSocket.getInputStream());
         } catch (IOException e) {
             System.out.println("Error opening input and output streams.");
         }
     }
 
     private String getClientRequest() {
-        StringBuilder clientMessage = new StringBuilder();
-        int c = 0;
-        String numStrings = "";
-        int count = 0;
+        String clientRequest = "";
+
         try {
-            clientMessage.append((char)in.read());
-            char nextChar = (char)in.read();
-            if (!Character.isDigit(nextChar))
-                return null;
-
-            while (Character.isDigit(nextChar)) {
-                numStrings += ("" + nextChar) ;
-                nextChar = (char)in.read();
-            }
-
-            clientMessage.append(numStrings);
-            while (count < 1 + 2 * Integer.parseInt(numStrings)) {
-                c = in.read();
-                if ((char) c == '\n') {
-                    count++;
-                }
-                clientMessage.append((char) c);
-            }
+            clientRequest = in.readUTF();
         } catch (IOException e) {
             System.out.println("Client " + this.clientNumber + " disconnected.");
         }
 
-        return clientMessage.toString();
+        return clientRequest;
     }
 
     private void communicate() {

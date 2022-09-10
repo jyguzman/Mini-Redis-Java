@@ -16,7 +16,13 @@ public class RESPDeserializer {
                 i += CRLF.length();
                 String word = "";
                 for (int j = 0; j < Integer.parseInt(numChars); j++) {
-                    word += respArray.charAt(i++);
+                    if (respArray.charAt(i) == '\\') {
+                        if (respArray.charAt(i) == 'n') {
+                            word += '\n'; i += 2;
+                        }
+                    } else {
+                        word += respArray.charAt(i++);
+                    }
                 }
                 result[resultIndex] = word;
                 resultIndex++;

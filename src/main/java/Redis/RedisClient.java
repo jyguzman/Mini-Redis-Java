@@ -2,15 +2,16 @@ package Redis;
 
 import RESPUtils.RESPSerializer;
 
+import javax.xml.crypto.Data;
 import java.io.*;
 import java.net.Socket;
 
 public class RedisClient {
     private static final int PORT = 6379;
     private static final String HOST = "127.0.0.1";
-    private BufferedReader in;
+    private DataInputStream in;
     private BufferedReader stdIn;
-    private PrintWriter out;
+    private DataOutputStream out;
     private Socket clientSocket;
 
     private RESPSerializer serializer = new RESPSerializer();
@@ -23,8 +24,8 @@ public class RedisClient {
         }
 
         try {
-            out = new PrintWriter(clientSocket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            out = new DataOutputStream(clientSocket.getOutputStream());
+            in = new DataInputStream(clientSocket.getInputStream());
             stdIn = new BufferedReader(new InputStreamReader(System.in));
         } catch (IOException e) {
             System.out.println("Error opening streams.");
@@ -44,10 +45,17 @@ public class RedisClient {
 
     public String sendMessage(String message) {
         String respArray = serializer.serializeToRespArray(message);
-        out.println(respArray.substring(0, respArray.length() - 2));
-        String response = "";
         try {
-            response = in.readLine();
+            out.writeUTF(respArray.substring(0, respArray.length() - 2));
+            out.flush();
+        } catch(IOException e) {
+            System.out.println("Trouble sending client request.");
+        }
+
+        String response = "";
+
+        try {
+            response = in.readUTF();
         } catch (IOException e) {
             System.out.println("Error receiving response.");
         }

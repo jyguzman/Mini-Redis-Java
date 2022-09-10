@@ -17,4 +17,8 @@ public class Cache {
     public void delete(String key) {
         this.cache.remove(key);
     }
+
+    public boolean contains(String key) {
+        return this.cache.containsKey(key);
+    }
 }

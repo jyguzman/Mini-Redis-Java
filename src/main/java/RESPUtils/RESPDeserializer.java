@@ -18,7 +18,6 @@ public class RESPDeserializer {
                 for (int j = 0; j < Integer.parseInt(numChars); j++) {
                     word += respArray.charAt(i++);
                 }
-                System.out.println(word);
                 result[resultIndex] = word;
                 resultIndex++;
             }

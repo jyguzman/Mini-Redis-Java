@@ -38,6 +38,10 @@ public class RESPSerializer {
         return "" + firstByte + message.length() + CLRF + message + CLRF;
     }
 
+    private String serializeBulkString(String message) {
+        return "$" + message.length() + CLRF + message + CLRF;
+    }
+
     public String serializeToRespArray(String message) {
         List<String> clientMessageArgs = new ArrayList();
 
@@ -49,7 +53,7 @@ public class RESPSerializer {
         StringBuilder respArray = new StringBuilder();
         respArray.append("*" + clientMessageArgs.size() + CLRF);
         String joinedBulkStrings = clientMessageArgs.stream()
-                .map(string -> this.serializeString(string, "BulkString"))
+                .map(string -> this.serializeBulkString(string))
                 .collect(Collectors.joining(""));
 
         return respArray.append(joinedBulkStrings).toString();

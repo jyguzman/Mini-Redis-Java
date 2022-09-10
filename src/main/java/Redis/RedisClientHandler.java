@@ -1,25 +1,16 @@
 package Redis;
 
-import DataUtils.Cache;
 import RESPUtils.RESPDeserializer;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class RedisClientHandler extends Thread {
     private Socket clientSocket;
-
     private PrintWriter out;
     private BufferedReader in;
-
     private int clientNumber;
-
     private RESPDeserializer deserializer = new RESPDeserializer();
-
     private RedisController controller;
     public RedisClientHandler(Socket clientSocket, RedisController controller, int clientNumber) {
         this.clientSocket = clientSocket;
@@ -36,7 +27,7 @@ public class RedisClientHandler extends Thread {
         }
     }
 
-    private String getClientInput() {
+    private String getClientRequest() {
         StringBuilder clientMessage = new StringBuilder();
         int c = 0;
         String numStrings = "";
@@ -68,40 +59,10 @@ public class RedisClientHandler extends Thread {
     }
 
     private void communicate() {
-        String clientMessage = this.getClientInput();
-        //System.out.println(clientMessage);
-        while (clientMessage != null) {
-            String[] clientMessageArgs = deserializer.deserializeRespArray(clientMessage);
-            if (clientMessageArgs.length == 0) break;
-            String command = clientMessageArgs[0].toLowerCase();
-            switch (command) {
-                case "echo":
-                    out.println("+" + clientMessageArgs[1]);
-                    break;
-                case "set":
-                    String key = clientMessageArgs[1];
-                    controller.set(key, clientMessageArgs[2]);
-                    if (clientMessageArgs.length > 3 && clientMessageArgs[3].equalsIgnoreCase("PX")) {
-                        TimerTask deleteKey = new TimerTask() {
-                            public void run() {
-                                controller.delete(key);
-                            }
-                        };
-                        new Timer("Timer").schedule(deleteKey, Long.parseLong(clientMessageArgs[4]));
-                        //controller.deleteKeyAfterTimeMilliseconds(key, Long.parseLong(clientMessageArgs[4]));
-                    }
-                    out.println("+OK");
-
-                    break;
-                case "get":
-                    out.println(controller.get(clientMessageArgs[1]));
-                    break;
-                default:
-                    out.println("+PONG");
-                    break;
-            }
-
-            clientMessage = this.getClientInput();
+        String[] clientRequestArgs = deserializer.deserializeRespArray(this.getClientRequest());
+        while (clientRequestArgs.length > 0) {
+            controller.fulfillClientRequest(clientRequestArgs, out);
+            clientRequestArgs = deserializer.deserializeRespArray(this.getClientRequest());
         }
     }
 

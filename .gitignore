@@ -2,7 +2,9 @@
 .idea
 /.idea
 /.target
-
+idea/
+.idea/
+target/
 # Compiled class file
 *.class
 

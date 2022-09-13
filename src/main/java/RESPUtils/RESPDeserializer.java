@@ -43,7 +43,6 @@ public class RESPDeserializer {
                     word += respArray.charAt(i);
                     i++;
                 }
-                System.out.println(word);
                 result[resultIndex] = word;
                 resultIndex++;
             }

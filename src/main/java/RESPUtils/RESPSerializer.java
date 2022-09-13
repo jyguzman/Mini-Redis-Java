@@ -30,9 +30,13 @@ public class RESPSerializer {
     }
 
     private String serializeMessage(String message, ResponseType type) {
+        if (message == null) {
+            return "$-1\r\n";
+        }
         StringBuilder result = new StringBuilder(Character.toString(this.getFirstByte(type)));
-        if (type == ResponseType.BULK_STRING)
+        if (type == ResponseType.BULK_STRING) {
             result.append(message.length()).append(CRLF);
+        }
         return result.append(message).append(CRLF).toString();
     }
 
@@ -58,9 +62,6 @@ public class RESPSerializer {
 
     public String ok() {
         return this.serializeSimpleString("OK");
-    }
-    public String nullBulkString() {
-        return this.serializeSimpleString("-1");
     }
 
     public String serializeToRespArray(String message) {

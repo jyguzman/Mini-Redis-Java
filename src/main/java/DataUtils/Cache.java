@@ -1,18 +1,22 @@
 package DataUtils;
 
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Cache {
+    private Set<String> keysInOrder = new LinkedHashSet();
     private Map<String, String> cache = new ConcurrentHashMap();
     private Map<String, Map<String, String>> cacheOfHashes = new HashMap();
     public void put(String key, String value) {
+        this.keysInOrder.add(key);
         this.cache.put(key, value);
     }
 
     public void putHash(String key, Map<String, String> hash) {
+        this.keysInOrder.add(key);
         this.cacheOfHashes.put(key, hash);
     }
 
@@ -24,22 +28,17 @@ public class Cache {
     }
 
     public void delete(String key) {
-        this.cache.remove(key);
-    }
-    public void deleteHash(String key) {
-        this.cacheOfHashes.remove(key);
+        if (this.cache.containsKey(key)) this.cache.remove(key);
+        if (this.cacheOfHashes.containsKey(key)) this.cacheOfHashes.remove(key);
+        this.keysInOrder.remove(key);
     }
 
     public boolean contains(String key) {
-        return this.cache.containsKey(key);
-    }
-
-    public boolean containsHash(String key) {
-        return this.cacheOfHashes.containsKey(key);
+        return this.keysInOrder.contains(key);
     }
 
     public Set<String> keys() {
-        return this.cache.keySet();
+        return this.keysInOrder;
     }
     public Set<String> hashes() {
         return this.cacheOfHashes.keySet();

@@ -66,8 +66,7 @@ public class RedisController {
     }
 
     public String get(String key) {
-        String value = this.cache.get(key);
-        return (value != null ? serializer.serializeBulkString(value) : serializer.nullBulkString());
+        return serializer.serializeBulkString(this.cache.get(key));
     }
 
     public String mset(String[] args) {
@@ -99,34 +98,27 @@ public class RedisController {
 
     public String hget(String[] args) {
         String hashName = args[1];
-        if (!(this.cache.containsHash(hashName)))
-            return serializer.nullBulkString();
+        if (!(this.cache.contains(hashName)))
+            return serializer.serializeBulkString(null);
 
         String key = args[2];
         Map<String, String> hash = this.cache.getHash(hashName);
         if (!(hash.containsKey(key)))
-            return serializer.nullBulkString();
+            return serializer.serializeBulkString(null);
 
-        String value = hash.get(key);
-        return (value != null ? serializer.serializeBulkString(value) : serializer.nullBulkString());
+        return serializer.serializeBulkString(hash.get(key));
     }
 
     public String keys() {
         Set<String> keys = this.cache.keys();
-        Set<String> hashNames = this.cache.hashes();
 
-        if (keys.size() == 0 && hashNames.size() == 0)
+        if (keys.size() == 0)
             return "*-1" + CRLF;
 
         StringBuilder keyList = new StringBuilder("*");
-        int i = 0;
+        int keyNum = 0;
         for (String key : keys) {
-            String thing = String.format("\" %d) %s", ++i, key);
-            keyList.append(++i + ") " + key + CRLF);
-        }
-
-        for (String key : hashNames) {
-            keyList.append(++i + ") " + key + CRLF);
+            keyList.append(++keyNum + ") " + key + CRLF);
         }
 
         return keyList.toString();
@@ -146,8 +138,8 @@ public class RedisController {
                 numKeysDeleted++;
             }
 
-            if (this.cache.containsHash(args[i])) {
-                this.cache.deleteHash(args[i]);
+            if (this.cache.contains(args[i])) {
+                this.cache.delete(args[i]);
                 numKeysDeleted++;
             }
         }

@@ -2,7 +2,7 @@ package RESPUtils;
 public class RESPDeserializer {
     private static final String CRLF = "\r\n";
 
-    public String deserializeNonArrayRedisResponse(String redisResponse) {
+    public String deserializeRedisResponse(String redisResponse) {
         if (redisResponse == null || redisResponse.length() == 0) return null;
 
         String message = redisResponse.substring(1, redisResponse.length() - 2); // Remove first byte and CRLF
@@ -33,20 +33,24 @@ public class RESPDeserializer {
         while (i < respArray.length()) {
             if (respArray.charAt(i) == '$') {
                 String numChars = "";
+                //System.out.println("KLDSKLKLSDKLDKL");
                 while (Character.isDigit(respArray.charAt(++i))) {
                     numChars += respArray.charAt(i) + "";
                 }
+
                 i += CRLF.length();
                 String word = "";
                 for (int j = 0; j < Integer.parseInt(numChars); j++) {
                     word += respArray.charAt(i);
                     i++;
                 }
+
                 result[resultIndex] = word;
                 resultIndex++;
             }
             i++;
         }
+
         return result;
     }
 

@@ -11,35 +11,52 @@ public class RESPSerializer {
     private static final String regex = "(\".*\"|[^\"\\s]+)+(?=\\s*|\\s*$)"; // removed first question mark
     private Pattern p;
 
-    private enum ResponseType {
-        BULK_STRING, SIMPLE_STRING, ERROR, INTEGER
+    public enum ResponseType {
+        BULK_STRING, SIMPLE_STRING, ERROR, INTEGER, RESP_ARRAY
     }
 
     public RESPSerializer() {
         this.p = Pattern.compile(regex);
     }
 
-    public String serializeString(String message, String type) {
-        char firstByte = 'a';
+    private char getFirstByte(ResponseType type) {
         switch (type) {
-            case "BulkString":
-                firstByte = '$';
-                break;
-            case "SimpleString":
-                firstByte = '+';
-                break;
-            case "Error":
-                firstByte = '-';
-                break;
-            case "Integer":
-                firstByte = ':';
-                break;
+            case BULK_STRING -> { return '$'; }
+            case SIMPLE_STRING -> { return '+'; }
+            case INTEGER -> { return ':'; }
+            case RESP_ARRAY -> { return '*'; }
+            default -> { return '-'; }
         }
-        return "" + firstByte + message.length() + CRLF + message + CRLF;
     }
 
-    private String serializeBulkString(String message) {
-        return "$" + message.length() + CRLF + message + CRLF;
+    public String serializeMessage(String message, ResponseType type) {
+        StringBuilder result = new StringBuilder("" + this.getFirstByte(type));
+        if (type == ResponseType.BULK_STRING)
+            result.append(message.length()).append(CRLF);
+        return result.append(message).append(CRLF).toString();
+    }
+
+    public String serializeSimpleString(String string) {
+        return this.serializeMessage(string, ResponseType.SIMPLE_STRING);
+    }
+
+    public String serializeBulkString(String string) {
+        return this.serializeMessage(string, ResponseType.BULK_STRING);
+    }
+
+    public String serializeInteger(int integer) {
+        return this.serializeMessage(Integer.toString(integer), ResponseType.SIMPLE_STRING);
+    }
+
+    public String serializeError(String error) {
+        return this.serializeMessage("ERROR " + error, ResponseType.ERROR);
+    }
+
+    public String ok() {
+        return this.serializeSimpleString("OK");
+    }
+    public String nullBulkString() {
+        return this.serializeSimpleString("-1");
     }
 
     public String serializeToRespArray(String message) {

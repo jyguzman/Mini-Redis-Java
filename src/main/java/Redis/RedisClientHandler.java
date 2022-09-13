@@ -40,10 +40,12 @@ public class RedisClientHandler extends Thread {
     }
 
     private void communicate() {
-        String[] clientRequestArgs = deserializer.deserializeRespArray(this.getClientRequest());
+        String clientRequest = this.getClientRequest();
+        String[] clientRequestArgs = deserializer.deserializeRespArray(clientRequest);
         while (clientRequestArgs.length > 0) {
             controller.fulfillClientRequest(clientRequestArgs, out);
-            clientRequestArgs = deserializer.deserializeRespArray(this.getClientRequest());
+            clientRequest = this.getClientRequest();
+            clientRequestArgs = deserializer.deserializeRespArray(clientRequest);
         }
     }
 

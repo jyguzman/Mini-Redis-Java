@@ -9,7 +9,7 @@ public class RESPDeserializer {
         StringBuilder result = new StringBuilder();
         char firstByte = redisResponse.charAt(0);
         switch (firstByte) {
-            case '$' -> { return message.equals("-1") ? "(nil)" : message; }
+            case '$' -> { return message.equals("-1") ? "(nil)" : message.substring(3); }
             case ':' -> { return result.append("(integer) ").append(message).toString(); }
             case '-' -> { return result.append("ERROR ").append(message).toString(); }
             case '*' -> {
@@ -33,7 +33,6 @@ public class RESPDeserializer {
         while (i < respArray.length()) {
             if (respArray.charAt(i) == '$') {
                 String numChars = "";
-                //System.out.println("KLDSKLKLSDKLDKL");
                 while (Character.isDigit(respArray.charAt(++i))) {
                     numChars += respArray.charAt(i) + "";
                 }
@@ -44,7 +43,7 @@ public class RESPDeserializer {
                     word += respArray.charAt(i);
                     i++;
                 }
-
+                System.out.println(word);
                 result[resultIndex] = word;
                 resultIndex++;
             }
@@ -54,7 +53,7 @@ public class RESPDeserializer {
         return result;
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         RESPSerializer ser = new RESPSerializer();
         String serD = ser.serializeToRespArray("SET name jordie");
         System.out.println(serD);
@@ -63,5 +62,5 @@ public class RESPDeserializer {
         for (String str : arr) {
             System.out.print(str + " ");
         }
-    }
+    }*/
  }

@@ -83,6 +83,7 @@ public class RedisClient {
         while (!(userInput.equalsIgnoreCase("quit"))) {
             String redisResponse = client.sendMessage(userInput);
             System.out.println(client.deserializer.deserializeRedisResponse(redisResponse));
+            //System.out.println(redisResponse);
             userInput = client.getClientInput();
         }
 

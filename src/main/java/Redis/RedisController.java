@@ -121,11 +121,14 @@ public class RedisController {
         StringBuilder keyList = new StringBuilder("*");
         int i = 0;
         for (String key : keys) {
+            String thing = String.format("\" %d) %s", ++i, key);
             keyList.append(++i + ") " + key + CRLF);
         }
+
         for (String key : hashNames) {
             keyList.append(++i + ") " + key + CRLF);
         }
+
         return keyList.toString();
     }
 

@@ -6,7 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.*;
 public class RESPSerializer {
-    private static final String CLRF = "\r\n";
+    private static final String CRLF = "\r\n";
     //private static final String regex = "(\".*?\"|[^\"\\s]+)+(?=\\s*|\\s*$)";
     private static final String regex = "(\".*\"|[^\"\\s]+)+(?=\\s*|\\s*$)"; // removed first question mark
     private Pattern p;
@@ -35,11 +35,11 @@ public class RESPSerializer {
                 firstByte = ':';
                 break;
         }
-        return "" + firstByte + message.length() + CLRF + message + CLRF;
+        return "" + firstByte + message.length() + CRLF + message + CRLF;
     }
 
     private String serializeBulkString(String message) {
-        return "$" + message.length() + CLRF + message + CLRF;
+        return "$" + message.length() + CRLF + message + CRLF;
     }
 
     public String serializeToRespArray(String message) {
@@ -52,7 +52,7 @@ public class RESPSerializer {
         }
 
         StringBuilder respArray = new StringBuilder();
-        respArray.append("*" + clientMessageArgs.size() + CLRF);
+        respArray.append("*" + clientMessageArgs.size() + CRLF);
         String joinedBulkStrings = clientMessageArgs.stream()
                 .map(string -> this.serializeBulkString(string))
                 .collect(Collectors.joining(""));

@@ -1,6 +1,7 @@
 package Redis;
 
 import RESPUtils.RESPSerializer;
+import RESPUtils.RESPDeserializer;
 
 import javax.xml.crypto.Data;
 import java.io.*;
@@ -15,6 +16,7 @@ public class RedisClient {
     private Socket clientSocket;
 
     private RESPSerializer serializer = new RESPSerializer();
+    private RESPDeserializer deserializer = new RESPDeserializer();
 
     public void connect() {
         try {
@@ -80,6 +82,7 @@ public class RedisClient {
         String userInput = client.getClientInput();
         while (!(userInput.equalsIgnoreCase("quit"))) {
             String response = client.sendMessage(userInput);
+
             System.out.println(response.substring(1));
             userInput = client.getClientInput();
         }

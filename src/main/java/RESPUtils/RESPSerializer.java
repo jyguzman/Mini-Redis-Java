@@ -2,13 +2,15 @@ package RESPUtils;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.*;
 public class RESPSerializer {
     private static final String CRLF = "\r\n";
     //private static final String regex = "(\".*?\"|[^\"\\s]+)+(?=\\s*|\\s*$)";
-    private static final String regex = "(\".*\"|[^\"\\s]+)+(?=\\s*|\\s*$)"; // removed first question mark
+    //private static final String regex = "(\".*\"|[^\"\\s]+)+(?=\\s*|\\s*$)"; // removed first question mark
+    private static final String regex = "(\".*\"|[^\"\s]+)+(?=\s*|\s*$)";
     private Pattern p;
 
     private enum ResponseType {
@@ -36,6 +38,7 @@ public class RESPSerializer {
         StringBuilder result = new StringBuilder(Character.toString(this.getFirstByte(type)));
         if (type == ResponseType.BULK_STRING) {
             result.append(message.length()).append(CRLF);
+            if (message.length() == 0) return result.toString();
         }
         return result.append(message).append(CRLF).toString();
     }
@@ -50,10 +53,6 @@ public class RESPSerializer {
 
     public String serializeInteger(int integer) {
         return this.serializeMessage(Integer.toString(integer), ResponseType.INTEGER);
-    }
-
-    public String serializeArray(String respArray) {
-        return this.serializeMessage(respArray, ResponseType.RESP_ARRAY);
     }
 
     public String serializeError(String error) {
@@ -84,7 +83,7 @@ public class RESPSerializer {
 
     public static void main(String[] args) {
         RESPSerializer ser = new RESPSerializer();
-        System.out.print(ser.serializeInteger(1));
+        System.out.print(ser.serializeToRespArray("SET name \"\""));
     }
 }
 

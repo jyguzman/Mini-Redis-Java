@@ -64,6 +64,16 @@ public class RedisClient {
         return response;
     }
 
+    public String readRedisResponse() {
+        String response = "";
+        try {
+            response = in.readUTF();
+        } catch (IOException e) {
+            System.out.println("Error receiving response.");
+        }
+        return response;
+    }
+
     public void end() {
         try {
             in.close();

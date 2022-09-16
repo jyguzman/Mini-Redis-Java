@@ -7,9 +7,11 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Cache {
+
     private Set<String> keysInOrder = new LinkedHashSet();
     private Map<String, String> cache = new ConcurrentHashMap();
     private Map<String, Map<String, String>> cacheOfHashes = new HashMap();
+
     public void put(String key, String value) {
         this.keysInOrder.add(key);
         this.cache.put(key, value);
@@ -39,8 +41,5 @@ public class Cache {
 
     public Set<String> keys() {
         return this.keysInOrder;
-    }
-    public Set<String> hashes() {
-        return this.cacheOfHashes.keySet();
     }
 }

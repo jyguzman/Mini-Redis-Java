@@ -3,7 +3,6 @@ package Redis;
 import RESPUtils.RESPSerializer;
 import RESPUtils.RESPDeserializer;
 
-import javax.xml.crypto.Data;
 import java.io.*;
 import java.net.Socket;
 
@@ -45,7 +44,7 @@ public class RedisClient {
         return userInput;
     }
 
-    public String sendMessage(String message) {
+    private String sendMessage(String message) {
         String respArray = serializer.serializeToRespArray(message);
         try {
             out.writeUTF(respArray.substring(0, respArray.length() - 2));
@@ -85,18 +84,31 @@ public class RedisClient {
         }
     }
 
-    public static void main(String[] args) {
-        RedisClient client = new RedisClient();
-        client.connect();
+    public void communicate() {
+        String userInput = this.getClientInput();
+        while (!(userInput.equalsIgnoreCase("quit"))) {
+            String redisResponse = this.sendMessage(userInput);
+            System.out.println(this.deserializer.formatRedisResponse(redisResponse));
+            userInput = this.getClientInput();
+        }
+    }
 
+    public static void main(String[] args) {
+        /*RedisClient client = new RedisClient();
+        client.connect();
+        client.communicate();
         String userInput = client.getClientInput();
         while (!(userInput.equalsIgnoreCase("quit"))) {
             String redisResponse = client.sendMessage(userInput);
             System.out.println(client.deserializer.deserializeRedisResponse(redisResponse));
-            //System.out.println(redisResponse);
             userInput = client.getClientInput();
         }
 
+        client.end();*/
+
+        RedisClient client = new RedisClient();
+        client.connect();
+        client.communicate();
         client.end();
     }
 }

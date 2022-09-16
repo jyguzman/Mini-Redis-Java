@@ -6,7 +6,6 @@ import RESPUtils.RESPSerializer;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class RedisController {
 
@@ -70,8 +69,7 @@ public class RedisController {
     }
 
     public String mset(String[] args) {
-        if ((args.length - 1) % 2 != 0)
-            return serializer.serializeError("Not enough arguments.");
+        if ((args.length - 1) % 2 != 0) return serializer.serializeError("Not enough arguments.");
 
         for (int i = 1; i < args.length - 1; i += 2) {
             this.cache.put(args[i], args[i + 1]);
@@ -81,8 +79,7 @@ public class RedisController {
     }
 
     public String hset(String[] args) {
-        if (args.length % 2 != 0)
-            return serializer.serializeError("Not enough arguments.");
+        if (args.length % 2 != 0) return serializer.serializeError("Not enough arguments.");
 
         Map<String, String> hash = new HashMap();
         String hashName = args[1];
@@ -133,11 +130,6 @@ public class RedisController {
     public String delete(String[] args) {
         int numKeysDeleted = 0;
         for (int i = 1; i < args.length; i++) {
-            if (this.cache.contains(args[i])) {
-                this.cache.delete(args[i]);
-                numKeysDeleted++;
-            }
-
             if (this.cache.contains(args[i])) {
                 this.cache.delete(args[i]);
                 numKeysDeleted++;

@@ -17,7 +17,7 @@ class RESPDeserializerTest {
     }
 
     @Test
-    void deserializeRedisResponse() {
+    void formatRedisResponse() {
     }
 
     @Test

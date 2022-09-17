@@ -1,4 +1,9 @@
 package RESPUtils;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
+
 public class RESPDeserializer {
     private static final String CRLF = "\r\n";
 
@@ -10,7 +15,12 @@ public class RESPDeserializer {
         StringBuilder result = new StringBuilder();
         char firstByte = redisResponse.charAt(0);
         switch (firstByte) {
-            case '$' -> { return message.equals("-1") ? "(nil)" : message.substring(3); }
+            case '$' -> {
+                if (message.equals("-1")) return "(nil)";
+                int pointer = 0;
+                while (message.charAt(pointer++) != '\n') {}
+                return message.substring(pointer);
+            }
             case ':' -> { return result.append("(integer) ").append(message).toString(); }
             case '-' -> { return result.append("ERROR ").append(message).toString(); }
             case '*' -> {
@@ -41,15 +51,11 @@ public class RESPDeserializer {
                 while (Character.isDigit(respArray.charAt(++i))) {
                     numChars += respArray.charAt(i) + "";
                 }
-
-                i += CRLF.length();
-                String word = "";
+                i += CRLF.length(); String word = "";
                 for (int j = 0; j < Integer.parseInt(numChars); j++) {
-                    word += respArray.charAt(i);
-                    i++;
+                    word += respArray.charAt(i++);
                 }
-                result[resultIndex] = word;
-                resultIndex++;
+                result[resultIndex++] = word;
             }
             i++;
         }
@@ -57,14 +63,17 @@ public class RESPDeserializer {
         return result;
     }
 
-    /*public static void main(String[] args) {
+    public static void main(String[] args) {
         RESPSerializer ser = new RESPSerializer();
-        String serD = ser.serializeToRespArray("SET name jordie");
+        Scanner in = new Scanner(System.in);
+        System.out.print("Input: ");
+        String userIn = in.nextLine();
+        String serD = ser.serializeToRespArray(userIn);
         System.out.println(serD);
         RESPDeserializer des = new RESPDeserializer();
         String[] arr = des.deserializeRespArray(serD);
         for (String str : arr) {
             System.out.print(str + " ");
         }
-    }*/
+    }
  }

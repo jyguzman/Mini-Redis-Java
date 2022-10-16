@@ -1,7 +1,6 @@
 package Redis;
 
 import DataUtils.Cache;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -20,6 +19,7 @@ public class RedisServer {
     public void start() {
         try {
             this.serverSocket = new ServerSocket(this.PORT);
+            System.out.println("Accepting connections.");
             while (true) {
                 this.clientNumber++;
                 this.serverSocket.setReuseAddress(true);

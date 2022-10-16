@@ -62,18 +62,4 @@ public class RESPDeserializer {
 
         return result;
     }
-
-    public static void main(String[] args) {
-        RESPSerializer ser = new RESPSerializer();
-        Scanner in = new Scanner(System.in);
-        System.out.print("Input: ");
-        String userIn = in.nextLine();
-        String serD = ser.serializeToRespArray(userIn);
-        System.out.println(serD);
-        RESPDeserializer des = new RESPDeserializer();
-        String[] arr = des.deserializeRespArray(serD);
-        for (String str : arr) {
-            System.out.print(str + " ");
-        }
-    }
  }

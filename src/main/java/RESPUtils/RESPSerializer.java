@@ -80,10 +80,5 @@ public class RESPSerializer {
 
         return respArray.append(joinedBulkStrings).toString();
     }
-
-    public static void main(String[] args) {
-        RESPSerializer ser = new RESPSerializer();
-        System.out.print(ser.serializeToRespArray("SET name \"\""));
-    }
 }
 

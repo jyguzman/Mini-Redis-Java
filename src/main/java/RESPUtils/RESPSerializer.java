@@ -32,9 +32,7 @@ public class RESPSerializer {
     }
 
     private String serializeMessage(String message, ResponseType type) {
-        if (message == null) {
-            return "$-1\r\n";
-        }
+        if (message == null) return "$-1\r\n";
         StringBuilder result = new StringBuilder(Character.toString(this.getFirstByte(type)));
         if (type == ResponseType.BULK_STRING) {
             result.append(message.length()).append(CRLF);
@@ -67,15 +65,15 @@ public class RESPSerializer {
         if (message == null || message.length() == 0) return null;
         List<String> clientMessageArgs = new ArrayList();
 
-        Matcher matches = this.p.matcher(message);
-        while (matches.find()) {
-            clientMessageArgs.add(matches.group());
+        Matcher arguments = this.p.matcher(message);
+        while (arguments.find()) {
+            clientMessageArgs.add(arguments.group());
         }
 
         StringBuilder respArray = new StringBuilder();
-        respArray.append("*" + clientMessageArgs.size() + CRLF);
+        respArray.append("*").append(clientMessageArgs.size()).append(CRLF);
         String joinedBulkStrings = clientMessageArgs.stream()
-                .map(string -> this.serializeBulkString(string))
+                .map(argument -> this.serializeBulkString(argument))
                 .collect(Collectors.joining(""));
 
         return respArray.append(joinedBulkStrings).toString();

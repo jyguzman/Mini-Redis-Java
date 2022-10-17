@@ -8,7 +8,7 @@ client-server communication.
 
 ## Usage
 Clone/download repository and open a terminal in the root folder. Enter the command 
-"./spawn_redis_server.sh" to start a server, and then enter "./spawn_redis_client.sh" to
+"./spawn_server.sh" to start a server, and then enter "./spawn_client.sh" to
 start a client that can accept commands.
 
 ## Commands 

@@ -5,20 +5,19 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.*;
-
 public class RESPSerializer {
     private static final String CRLF = "\r\n";
     //private static final String regex = "(\".*?\"|[^\"\\s]+)+(?=\\s*|\\s*$)";
     //private static final String regex = "(\".*\"|[^\"\\s]+)+(?=\\s*|\\s*$)"; // removed first question mark
     private static final String regex = "(\".*\"|[^\"\s]+)+(?=\s*|\s*$)";
-    private Pattern p;
+    private Pattern regexPattern;
 
     private enum ResponseType {
         BULK_STRING, SIMPLE_STRING, ERROR, INTEGER, RESP_ARRAY
     }
 
     public RESPSerializer() {
-        this.p = Pattern.compile(regex);
+        this.regexPattern = Pattern.compile(regex);
     }
 
     private char getFirstByte(ResponseType type) {
@@ -65,7 +64,7 @@ public class RESPSerializer {
         if (message == null || message.length() == 0) return null;
         List<String> clientMessageArgs = new ArrayList();
 
-        Matcher arguments = this.p.matcher(message);
+        Matcher arguments = this.regexPattern.matcher(message);
         while (arguments.find()) {
             clientMessageArgs.add(arguments.group());
         }
@@ -73,7 +72,7 @@ public class RESPSerializer {
         StringBuilder respArray = new StringBuilder();
         respArray.append("*").append(clientMessageArgs.size()).append(CRLF);
         String joinedBulkStrings = clientMessageArgs.stream()
-                .map(argument -> this.serializeBulkString(argument))
+                .map(this::serializeBulkString)
                 .collect(Collectors.joining(""));
 
         return respArray.append(joinedBulkStrings).toString();

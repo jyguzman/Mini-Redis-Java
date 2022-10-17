@@ -114,13 +114,12 @@ public class RedisController {
     public String keys() {
         Set<String> keys = this.cache.keys();
 
-        if (keys.size() == 0)
-            return "*-1" + CRLF;
+        if (keys.size() == 0) return "*-1" + CRLF;
 
         StringBuilder keyList = new StringBuilder("*");
-        int keyNum = 0;
+        int numberOfKeys = 0;
         for (String key : keys) {
-            keyList.append(++keyNum + ") " + key + CRLF);
+            keyList.append(++numberOfKeys + ") ").append(key).append(CRLF);
         }
 
         return keyList.toString();
@@ -133,15 +132,15 @@ public class RedisController {
     }
 
     public String delete(String[] args) {
-        int numKeysDeleted = 0;
+        int numberOfKeysDeleted = 0;
         for (int i = 1; i < args.length; i++) {
             if (this.cache.contains(args[i])) {
                 this.cache.delete(args[i]);
-                numKeysDeleted++;
+                numberOfKeysDeleted++;
             }
         }
 
-        return serializer.serializeInteger(numKeysDeleted);
+        return serializer.serializeInteger(numberOfKeysDeleted);
     }
 
     public String flushAll() {

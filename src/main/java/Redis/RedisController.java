@@ -5,14 +5,19 @@ import RESPUtils.RESPSerializer;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
+
 
 public class RedisController {
 
     private static final String CRLF = "\r\n";
     private final Cache cache;
 
-    private RESPSerializer serializer = new RESPSerializer();
+    private final RESPSerializer serializer = new RESPSerializer();
 
     public RedisController(Cache cache) {
         this.cache = cache;

@@ -6,6 +6,11 @@ that's often used a caching mechanism. I undertook this project to learn more ab
 of a popular technology, especially the Redis Serializer Protocol (RESP) that Redis employs for
 client-server communication.
 
+## Usage
+Clone/download repository and open a terminal in the root folder. Enter the command 
+"./spawn_redis_server.sh" to start a server, and then enter "./spawn_redis_client.sh" to
+start a client that can accept commands.
+
 ## Commands 
 In addition to PING and ECHO, this toy Redis supports the following commands:
 
@@ -19,7 +24,7 @@ In addition to PING and ECHO, this toy Redis supports the following commands:
 - EXISTS: Check to see if a given key is in the database.
 
 ## Possible Improvements/Extensions
-- (GitHub README) Provide video demonstration of program
+- (For GitHub README) Provide video demonstration of program
 - Implement Transactions, which allow a user to chain multiple commands
 - More extensive testing; tests are minimal right now
 - Implement event loop; Redis is single-threaded and employs an event loop, but this program is multi-threaded

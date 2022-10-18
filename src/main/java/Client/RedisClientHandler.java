@@ -1,6 +1,8 @@
-package Redis;
+package Client;
 
 import RESPUtils.RESPDeserializer;
+import Server.RedisController;
+
 import java.io.*;
 import java.net.Socket;
 

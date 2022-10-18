@@ -1,4 +1,4 @@
-package Redis;
+package Server;
 
 import DataUtils.Cache;
 import RESPUtils.RESPSerializer;
@@ -70,13 +70,16 @@ public class RedisController {
     }
 
     public String get(String key) {
+        if (key == null || key.length() == 0)
+            return serializer.serializeError("No value provided.");
         return serializer.serializeBulkString(this.cache.get(key));
     }
 
     public String mset(String[] args) {
         if ((args.length - 1) % 2 != 0) return serializer.serializeError("Not enough arguments.");
 
-        for (int i = 1; i < args.length - 1; i += 2) {
+        for (int i = 1; i < args.length; i += 2) {
+            System.out.println(args[i] + " : " + args[i+1]);
             this.cache.put(args[i], args[i + 1]);
         }
 
@@ -100,6 +103,9 @@ public class RedisController {
 
     public String hget(String[] args) {
         String hashName = args[1];
+        if (hashName == null || hashName.length() == 0)
+            return serializer.serializeError("No value provided.");
+
         if (!(this.cache.contains(hashName)))
             return serializer.serializeBulkString(null);
 

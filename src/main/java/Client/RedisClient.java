@@ -1,4 +1,4 @@
-package Redis;
+package Client;
 
 import RESPUtils.RESPSerializer;
 import RESPUtils.RESPDeserializer;

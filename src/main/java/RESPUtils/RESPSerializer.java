@@ -7,9 +7,9 @@ import java.util.regex.Pattern;
 import java.util.stream.*;
 public class RESPSerializer {
     private static final String CRLF = "\r\n";
-    //private static final String regex = "(\".*?\"|[^\"\\s]+)+(?=\\s*|\\s*$)";
+    private static final String regex = "(\".*?\"|[^\"\\s]+)+(?=\\s*|\\s*$)";
     //private static final String regex = "(\".*\"|[^\"\\s]+)+(?=\\s*|\\s*$)"; // removed first question mark
-    private static final String regex = "(\".*\"|[^\"\s]+)+(?=\s*|\s*$)";
+    //private static final String regex = "(\".*\"|[^\"\s]+)+(?=\s*|\s*$)";
     private Pattern regexPattern;
 
     private enum ResponseType {
@@ -74,7 +74,6 @@ public class RESPSerializer {
         String joinedBulkStrings = clientMessageArgs.stream()
                 .map(this::serializeBulkString)
                 .collect(Collectors.joining(""));
-
         return respArray.append(joinedBulkStrings).toString();
     }
 }
